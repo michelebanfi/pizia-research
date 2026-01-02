@@ -2,10 +2,11 @@
 Rate-Limited Async LLM Engine.
 
 Provides async LLM calls with per-model rate limiting using asynciolimiter.
-Based on the patterns from poetiq-arc-agi-solver.
+Supports both Google AI Studio (google-genai) and OpenRouter (litellm).
 """
 
 import asyncio
+import os
 from dataclasses import dataclass
 from typing import Any
 
@@ -14,7 +15,13 @@ from asynciolimiter import Limiter
 from litellm import acompletion
 from litellm import exceptions as litellm_exceptions
 
-from config import ModelConfig, get_default_cheap_model, get_default_reasoning_model
+from config import (
+    ModelConfig,
+    LLM_PROVIDER,
+    get_default_cheap_model,
+    get_default_reasoning_model,
+    get_api_key,
+)
 
 # Silence unnecessary litellm debug logs
 litellm.suppress_debug_info = True
@@ -41,12 +48,13 @@ class LLMEngine:
     Rate-limited async LLM caller.
     
     Uses asynciolimiter to prevent 429 errors when making parallel requests.
-    Supports multiple providers via litellm.
+    Supports Google AI Studio (google-genai) and OpenRouter (litellm).
     """
     
     def __init__(self):
         # Per-model rate limiters (rate = requests per second)
         self._limiters: dict[str, Limiter] = {}
+        self._google_client = None
     
     def _get_limiter(self, model: ModelConfig) -> Limiter:
         """Get or create a rate limiter for the given model."""
@@ -55,7 +63,17 @@ class LLMEngine:
             self._limiters[model_key] = Limiter(model.rate_limit)
         return self._limiters[model_key]
     
-    async def call(
+    def _get_google_client(self):
+        """Lazy-load the Google genai client."""
+        if self._google_client is None:
+            from google import genai
+            api_key = get_api_key("google")
+            if not api_key:
+                raise ValueError("GOOGLE_API_KEY environment variable not set")
+            self._google_client = genai.Client(api_key=api_key)
+        return self._google_client
+    
+    async def _call_google(
         self,
         model: ModelConfig,
         messages: list[dict[str, str]],
@@ -63,19 +81,97 @@ class LLMEngine:
         max_tokens: int | None = None,
         timeout: float = 300.0,
     ) -> LLMResponse:
-        """
-        Make a single async LLM call with rate limiting and retries.
+        """Make an async call to Google AI Studio."""
+        start_time = asyncio.get_event_loop().time()
         
-        Args:
-            model: Model configuration
-            messages: List of message dicts (role, content)
-            temperature: Sampling temperature
-            max_tokens: Optional max tokens for response
-            timeout: Request timeout in seconds
+        try:
+            client = self._get_google_client()
             
-        Returns:
-            LLMResponse with content and metadata
-        """
+            # Convert messages to Google format
+            # Google uses a simpler format: system instruction + contents
+            system_instruction = None
+            contents = []
+            
+            for msg in messages:
+                if msg["role"] == "system":
+                    system_instruction = msg["content"]
+                elif msg["role"] == "user":
+                    contents.append(msg["content"])
+                elif msg["role"] == "assistant":
+                    # For multi-turn, we'd need to handle this differently
+                    # For now, just append to contents
+                    contents.append(f"Assistant: {msg['content']}")
+            
+            # Combine all user messages into one content string
+            combined_content = "\n\n".join(contents)
+            
+            # Build generation config
+            from google.genai import types
+            
+            generation_config = types.GenerateContentConfig(
+                temperature=temperature,
+                max_output_tokens=max_tokens,
+            )
+            
+            if system_instruction:
+                generation_config.system_instruction = system_instruction
+            
+            # Run the sync call in a thread pool to make it async
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(
+                None,
+                lambda: client.models.generate_content(
+                    model=model.name,
+                    contents=combined_content,
+                    config=generation_config,
+                )
+            )
+            
+            end_time = asyncio.get_event_loop().time()
+            duration = end_time - start_time
+            
+            # Extract text from response
+            content = response.text if hasattr(response, 'text') else str(response)
+            
+            # Try to get usage metadata if available
+            prompt_tokens = 0
+            completion_tokens = 0
+            if hasattr(response, 'usage_metadata'):
+                usage = response.usage_metadata
+                prompt_tokens = getattr(usage, 'prompt_token_count', 0)
+                completion_tokens = getattr(usage, 'candidates_token_count', 0)
+            
+            return LLMResponse(
+                content=content.strip(),
+                duration=duration,
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                model=model.full_name,
+                success=True,
+            )
+            
+        except Exception as e:
+            end_time = asyncio.get_event_loop().time()
+            duration = end_time - start_time
+            return LLMResponse(
+                content="",
+                duration=duration,
+                prompt_tokens=0,
+                completion_tokens=0,
+                model=model.full_name,
+                success=False,
+                error=str(e),
+            )
+    
+    async def _call_openrouter(
+        self,
+        model: ModelConfig,
+        messages: list[dict[str, str]],
+        temperature: float = 0.7,
+        max_tokens: int | None = None,
+        timeout: float = 300.0,
+    ) -> LLMResponse:
+        """Make an async call via litellm (OpenRouter)."""
         limiter = self._get_limiter(model)
         attempt = 1
         
@@ -179,6 +275,38 @@ class LLMEngine:
             error="Retries exceeded",
         )
     
+    async def call(
+        self,
+        model: ModelConfig,
+        messages: list[dict[str, str]],
+        temperature: float = 0.7,
+        max_tokens: int | None = None,
+        timeout: float = 300.0,
+    ) -> LLMResponse:
+        """
+        Make a single async LLM call with rate limiting and retries.
+        
+        Routes to Google AI Studio or OpenRouter based on model provider.
+        
+        Args:
+            model: Model configuration
+            messages: List of message dicts (role, content)
+            temperature: Sampling temperature
+            max_tokens: Optional max tokens for response
+            timeout: Request timeout in seconds
+            
+        Returns:
+            LLMResponse with content and metadata
+        """
+        # Wait for rate limit (for Google too)
+        limiter = self._get_limiter(model)
+        await limiter.wait()
+        
+        if model.provider == "google":
+            return await self._call_google(model, messages, temperature, max_tokens, timeout)
+        else:
+            return await self._call_openrouter(model, messages, temperature, max_tokens, timeout)
+    
     async def parallel_generate(
         self,
         model: ModelConfig,
@@ -279,35 +407,29 @@ def get_engine() -> LLMEngine:
 
 async def _demo():
     """Demo the LLM engine functionality."""
-    from config import CHEAP_MODELS
+    from config import get_cheap_models, LLM_PROVIDER
     
     engine = get_engine()
-    model = CHEAP_MODELS[0]
+    models = get_cheap_models()
+    model = models[0]
     
-    print(f"Testing parallel generation with {model.full_name}...")
+    print(f"Using provider: {LLM_PROVIDER}")
+    print(f"Testing with model: {model.full_name}")
     
-    prompts = [
-        "Write a Python function to reverse a string.",
-        "Write a Python function to find the maximum element in a list.",
-        "Write a Python function to check if a number is prime.",
-    ]
-    
-    responses = await engine.parallel_generate(
-        model=model,
-        prompts=prompts,
-        system_prompt="You are a helpful coding assistant. Return only the code, no explanations.",
-        temperature=0.8,
+    # Simple single call test
+    print("\n--- Single Call Test ---")
+    response = await engine.generate_with_cheap_model(
+        prompt="Write a Python function to reverse a string. Return only the code.",
+        system_prompt="You are a helpful coding assistant.",
     )
     
-    for i, resp in enumerate(responses):
-        print(f"\n--- Response {i+1} ---")
-        print(f"Success: {resp.success}")
-        print(f"Duration: {resp.duration:.2f}s")
-        print(f"Tokens: {resp.prompt_tokens} prompt, {resp.completion_tokens} completion")
-        if resp.success:
-            print(f"Content:\n{resp.content[:200]}...")
-        else:
-            print(f"Error: {resp.error}")
+    print(f"Success: {response.success}")
+    print(f"Duration: {response.duration:.2f}s")
+    print(f"Tokens: {response.prompt_tokens} prompt, {response.completion_tokens} completion")
+    if response.success:
+        print(f"Content:\n{response.content[:500]}...")
+    else:
+        print(f"Error: {response.error}")
 
 
 if __name__ == "__main__":
