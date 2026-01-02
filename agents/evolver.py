@@ -22,6 +22,7 @@ from config import (
 )
 from utils.llm_engine import LLMEngine, LLMResponse, get_engine
 from utils.sandbox import ExecutionResult, run
+from utils.logger import get_logger
 
 
 @dataclass
@@ -382,6 +383,18 @@ class EvolverAgent:
             
             if on_generation:
                 on_generation(state)
+            
+            # Log generation progress
+            logger = get_logger()
+            if logger and best_this_gen:
+                all_scores = [s.score for s in history if s.generation == gen]
+                logger.log_generation(
+                    generation=gen,
+                    candidates_count=len(candidates),
+                    best_score=population.best.score if population.best else 0,
+                    best_code_preview=population.best.code if population.best else "",
+                    all_scores=all_scores,
+                )
             
             # Check early stop
             if population.best and population.best.score >= self.early_stop_score:

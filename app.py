@@ -397,10 +397,25 @@ async def run_evolution_pipeline(
     """
     from agents.researcher import ResearcherAgent
     from agents.evolver import EvolverAgent, EvolutionState
+    from utils.logger import start_run, get_logger
+    
+    # Start logging run
+    run_name = f"evolution_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    logger = start_run(run_name)
+    logger.set_config({
+        "problem_preview": problem[:200],
+        "max_generations": max_generations,
+        "num_candidates": num_candidates,
+        "force_search": force_search,
+        "num_urls": len(urls) if urls else 0,
+        "num_files": len(files) if files else 0,
+    })
+    logger.info("Pipeline started", phase="init")
     
     try:
         # Phase 1: Research
         st.session_state.research_status = "researching"
+        logger.info("Research phase started", phase="research")
         
         researcher = ResearcherAgent()
         
@@ -471,9 +486,19 @@ async def run_evolution_pipeline(
         
         st.session_state.research_status = "complete"
         
+        # Finish logging
+        logger.finish(
+            status="success" if result.success else "failed",
+            final_score=result.best_solution.score if result.best_solution else None,
+            final_code=result.best_solution.code if result.best_solution else None,
+        )
+        logger.info(f"Pipeline complete. Log saved to: {logger.log_file}")
+        
     except Exception as e:
         st.session_state.research_status = "error"
         st.session_state.error_message = f"Pipeline error: {str(e)}"
+        logger.error(f"Pipeline failed: {str(e)}")
+        logger.finish(status="failed")
         raise
 
 

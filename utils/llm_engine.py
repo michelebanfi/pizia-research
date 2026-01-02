@@ -22,6 +22,7 @@ from config import (
     get_default_reasoning_model,
     get_api_key,
 )
+from utils.logger import get_logger
 
 # Silence unnecessary litellm debug logs
 litellm.suppress_debug_info = True
@@ -303,9 +304,26 @@ class LLMEngine:
         await limiter.wait()
         
         if model.provider == "google":
-            return await self._call_google(model, messages, temperature, max_tokens, timeout)
+            response = await self._call_google(model, messages, temperature, max_tokens, timeout)
         else:
-            return await self._call_openrouter(model, messages, temperature, max_tokens, timeout)
+            response = await self._call_openrouter(model, messages, temperature, max_tokens, timeout)
+        
+        # Log the call if logger is active
+        logger = get_logger()
+        if logger:
+            prompt_preview = messages[-1]["content"] if messages else ""
+            logger.log_llm_call(
+                model=model.full_name,
+                prompt_preview=prompt_preview,
+                response_preview=response.content,
+                duration=response.duration,
+                prompt_tokens=response.prompt_tokens,
+                completion_tokens=response.completion_tokens,
+                success=response.success,
+                error=response.error,
+            )
+        
+        return response
     
     async def parallel_generate(
         self,
