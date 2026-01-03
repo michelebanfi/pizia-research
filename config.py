@@ -60,7 +60,7 @@ GOOGLE_CHEAP_MODELS: list[ModelConfig] = [
 
 GOOGLE_REASONING_MODELS: list[ModelConfig] = [
     ModelConfig(
-        name="models/gemini-2.5-pro",         # Strong reasoning capabilities
+        name="models/gemini-3-flash-preview",         # Strong reasoning capabilities
         provider="google",
         rate_limit=2.0,
         model_type="reasoning",

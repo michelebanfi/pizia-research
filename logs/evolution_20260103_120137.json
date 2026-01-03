@@ -1,0 +1,104 @@
+{
+  "run_id": "20260103_120137",
+  "run_name": "evolution_20260103_120137",
+  "started_at": "2026-01-03T12:01:37.369845",
+  "ended_at": "2026-01-03T12:03:36.002178",
+  "status": "failed",
+  "config": {
+    "problem_preview": "In the promiment field of Quantum Error Correction (QEC), the research is now focusing on Bivariate Bycicle (BB) codes since they provide a better alternatives to the 0 rate of surface code.\nEven tho ",
+    "max_generations": 5,
+    "num_candidates": 5,
+    "force_search": true,
+    "num_urls": 1,
+    "num_files": 1
+  },
+  "events": [
+    {
+      "timestamp": "2026-01-03T12:01:37.371491",
+      "level": "INFO",
+      "message": "Pipeline started",
+      "phase": "init"
+    },
+    {
+      "timestamp": "2026-01-03T12:01:37.373513",
+      "level": "INFO",
+      "message": "Research phase started",
+      "phase": "research"
+    },
+    {
+      "timestamp": "2026-01-03T12:03:36.000820",
+      "level": "ERROR",
+      "message": "Pipeline failed: "
+    },
+    {
+      "timestamp": "2026-01-03T12:03:36.002201",
+      "level": "INFO",
+      "message": "Run finished: failed",
+      "final_score": null,
+      "total_tokens": 36946
+    }
+  ],
+  "llm_calls": [
+    {
+      "timestamp": "2026-01-03T12:01:47.603042",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are a research query generator. Generate targeted search queries for the given problem.\n\n## Problem Description\nIn the promiment field of Quantum Error Correction (QEC), the research is now focusing on Bivariate Bycicle (BB) codes since they provide a better alternatives to the 0 rate of surface code.\nEven tho BB codes are not asymptotically good codes, they're implementation is the next step in Quantum Hardware to let some of those quantum algorithm to achieve quantum superiority\n\nBB codes,...",
+      "response_preview": "Here are 3-5 targeted search objectives:\n\n1.  Identify quantum error correction decoding algorithms, particularly for LDPC or BCH codes, that are inherently suitable for high-speed implementation using optical computing or photonic integrated circuits.\n2.  Explore the feasibility and existing methods for implementing fundamental operations required for error correction decoding (e.g., Fourier Transforms, syndrome computation, matrix multiplication) on photonic chips.\n3.  Investigate current rese...",
+      "duration_sec": 8.75,
+      "prompt_tokens": 1140,
+      "completion_tokens": 159,
+      "total_tokens": 1299,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T12:02:17.243412",
+      "model": "models/gemini-3-flash-preview",
+      "purpose": "general",
+      "prompt_preview": "You are a research synthesizer. Create a comprehensive context document from the gathered information.\n\n## Original Problem\nIn the promiment field of Quantum Error Correction (QEC), the research is now focusing on Bivariate Bycicle (BB) codes since they provide a better alternatives to the 0 rate of surface code.\nEven tho BB codes are not asymptotically good codes, they're implementation is the next step in Quantum Hardware to let some of those quantum algorithm to achieve quantum superiority\n\nB...",
+      "response_preview": "This context document provides a comprehensive synthesis of research regarding **Fast Optical Decoding for Bivariate Bicycle (BB) and qLDPC Codes**. It is designed to guide an AI coding agent in developing a photonic-based decoding implementation that circumvents the latency bottlenecks of classical electronic decoders.\n\n---\n\n# 1. Problem Analysis: The \"Latency Wall\"\nThe primary objective is to achieve **sub-microsecond Quantum Error Correction (QEC)**. \n\n### The Bottleneck\n*   **Decoherence Tim...",
+      "duration_sec": 19.44,
+      "prompt_tokens": 23679,
+      "completion_tokens": 1691,
+      "total_tokens": 25370,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T12:02:47.535799",
+      "model": "models/gemini-3-flash-preview",
+      "purpose": "general",
+      "prompt_preview": "You are a test case generator. Create comprehensive Python tests for the given problem.\n\n## Problem Description\nIn the promiment field of Quantum Error Correction (QEC), the research is now focusing on Bivariate Bycicle (BB) codes since they provide a better alternatives to the 0 rate of surface code.\nEven tho BB codes are not asymptotically good codes, they're implementation is the next step in Quantum Hardware to let some of those quantum algorithm to achieve quantum superiority\n\nBB codes, as ...",
+      "response_preview": "```python\nimport math\n\ndef run_tests():\n    \"\"\"\n    Comprehensive test suite for Photonic Bivariate Bicycle (BB) Code Decoder.\n    Tests cover code construction, CSS conditions, syndrome calculation, \n    and photonic-inspired decoding logic.\n    \"\"\"\n    results = {\"passed\": 0, \"total\": 0, \"details\": \"\"}\n\n    def report(name, success, message=\"\"):\n        results[\"total\"] += 1\n        if success:\n            results[\"passed\"] += 1\n            results[\"details\"] += f\"PASSED: {name}\\n\"\n        els...",
+      "duration_sec": 30.29,
+      "prompt_tokens": 2417,
+      "completion_tokens": 1895,
+      "total_tokens": 4312,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T12:03:35.996156",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an expert Python programmer. Generate a solution for the following problem.\n\n## Problem Context\nThis context document provides a comprehensive synthesis of research regarding **Fast Optical Decoding for Bivariate Bicycle (BB) and qLDPC Codes**. It is designed to guide an AI coding agent in developing a photonic-based decoding implementation that circumvents the latency bottlenecks of classical electronic decoders.\n\n---\n\n# 1. Problem Analysis: The \"Latency Wall\"\nThe primary objective is t...",
+      "response_preview": "```python\nimport numpy as np\nimport cmath # For complex math, e.g., phase\nimport math\n\n# --- 1. Abstract Simphony Components & Photonic Noise Model ---\n\nclass SimphonyCircuit:\n    \"\"\"\n    An abstract representation of a Simphony-modeled photonic circuit\n    for performing Fourier Transforms and applying non-linearities.\n    This class simulates the *effect* of such a circuit rather than\n    performing a full physics simulation. It incorporates key photonic\n    noise sources as described in the p...",
+      "duration_sec": 48.46,
+      "prompt_tokens": 1480,
+      "completion_tokens": 4485,
+      "total_tokens": 5965,
+      "success": true,
+      "error": null
+    }
+  ],
+  "evolution_history": [],
+  "summary": {
+    "total_llm_calls": 4,
+    "total_tokens": 36946,
+    "total_llm_duration_sec": 106.94,
+    "total_generations": 0,
+    "final_score": null,
+    "final_code_preview": null
+  }
+}

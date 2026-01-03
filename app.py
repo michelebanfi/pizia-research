@@ -7,6 +7,7 @@ Connects all components: ingestion, research, and evolution.
 
 import asyncio
 import streamlit as st
+import traceback
 from datetime import datetime
 
 # Page configuration
@@ -496,8 +497,13 @@ async def run_evolution_pipeline(
         
     except Exception as e:
         st.session_state.research_status = "error"
-        st.session_state.error_message = f"Pipeline error: {str(e)}"
-        logger.error(f"Pipeline failed: {str(e)}")
+        # Capture full exception details for debugging
+        error_type = type(e).__name__
+        error_msg = str(e) if str(e) else "(empty error message)"
+        full_traceback = traceback.format_exc()
+        detailed_error = f"{error_type}: {error_msg}\n\nTraceback:\n{full_traceback}"
+        st.session_state.error_message = f"Pipeline error: {detailed_error}"
+        logger.error(f"Pipeline failed: {error_type}: {error_msg}")
         logger.finish(status="failed")
         raise
 
