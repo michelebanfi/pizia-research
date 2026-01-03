@@ -99,6 +99,10 @@ Improve the code to pass more tests. Focus on fixing the errors shown above.
 If the code has syntax errors, fix them.
 If tests are failing, analyze why and fix the logic.
 
+**IMPORTANT**: When something doesn't work, think about WHY it doesn't work.
+Understanding the root cause helps expand our knowledge of the problem.
+If an approach fails, briefly note the reason before proposing the fix.
+
 Return ONLY the improved Python code, no explanations."""
 
 
@@ -126,6 +130,10 @@ exact code to find
 =======
 replacement code
 >>>>>>> REPLACE
+
+**IMPORTANT**: When something doesn't work, explain WHY it doesn't work.
+Understanding the root cause deepens our knowledge of the problem domain.
+Before each fix, briefly note the underlying reason for the failure.
 
 You can include multiple SEARCH/REPLACE blocks for different fixes.
 Be precise with the search text - it must match exactly."""

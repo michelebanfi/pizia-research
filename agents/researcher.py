@@ -193,6 +193,9 @@ Include:
 2. **Key Concepts**: Important algorithms, patterns, or techniques
 3. **Implementation Hints**: Relevant code patterns or approaches
 4. **Edge Cases**: Important considerations
+5. **What Doesn't Work & Why**: Document approaches that DON'T work and explain WHY they fail.
+   Understanding why something doesn't work expands and deepens our knowledge of the subject.
+   Include common pitfalls, failed approaches, and their root causes.
 
 Be thorough but concise. Use markdown formatting."""
 
