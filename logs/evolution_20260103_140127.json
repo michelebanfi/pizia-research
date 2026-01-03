@@ -1,0 +1,193 @@
+{
+  "run_id": "20260103_140127",
+  "run_name": "evolution_20260103_140127",
+  "started_at": "2026-01-03T14:01:27.368750",
+  "ended_at": "2026-01-03T14:04:41.547408",
+  "status": "failed",
+  "config": {
+    "problem_preview": "In the promiment field of Quantum Error Correction (QEC), the research is now focusing on Bivariate Bycicle (BB) codes since they provide a better alternatives to the 0 rate of surface code.\nEven tho ",
+    "max_generations": 2,
+    "num_candidates": 2,
+    "force_search": true,
+    "num_urls": 1,
+    "num_files": 1
+  },
+  "events": [
+    {
+      "timestamp": "2026-01-03T14:01:27.371013",
+      "level": "INFO",
+      "message": "Pipeline started",
+      "phase": "init"
+    },
+    {
+      "timestamp": "2026-01-03T14:01:27.373659",
+      "level": "INFO",
+      "message": "Research phase started",
+      "phase": "research"
+    },
+    {
+      "timestamp": "2026-01-03T14:03:53.033803",
+      "level": "INFO",
+      "message": "Generation 1: best=0.00, avg=0.00",
+      "generation": 1
+    },
+    {
+      "timestamp": "2026-01-03T14:04:41.544380",
+      "level": "INFO",
+      "message": "Generation 2: best=0.00, avg=0.00",
+      "generation": 2
+    },
+    {
+      "timestamp": "2026-01-03T14:04:41.547440",
+      "level": "INFO",
+      "message": "Run finished: failed",
+      "final_score": 0.0,
+      "total_tokens": 77650
+    },
+    {
+      "timestamp": "2026-01-03T14:04:41.550381",
+      "level": "INFO",
+      "message": "Pipeline complete. Log saved to: logs\\evolution_20260103_140127.json"
+    }
+  ],
+  "llm_calls": [
+    {
+      "timestamp": "2026-01-03T14:01:38.430948",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are a research query generator. Generate targeted search queries for the given problem.\n\n## Problem Description\nIn the promiment field of Quantum Error Correction (QEC), the research is now focusing on Bivariate Bycicle (BB) codes since they provide a better alternatives to the 0 rate of surface code.\nEven tho BB codes are not asymptotically good codes, they're implementation is the next step in Quantum Hardware to let some of those quantum algorithm to achieve quantum superiority\n\nBB codes,...",
+      "response_preview": "Here are 3-5 natural language search objectives to gather relevant information:\n\n1.  What quantum error correction decoding algorithms are inherently suitable for high-speed implementation using optical computation on integrated photonic chips, particularly for codes like BB codes or similar quantum LDPC codes?\n2.  Which quantum error correction codes are designed for or can be efficiently decoded using operations naturally suited for photonic computation, such as Fourier transforms, to achieve ...",
+      "duration_sec": 9.26,
+      "prompt_tokens": 1140,
+      "completion_tokens": 168,
+      "total_tokens": 1308,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T14:02:06.787011",
+      "model": "models/gemini-3-flash-preview",
+      "purpose": "general",
+      "prompt_preview": "You are a research synthesizer. Create a comprehensive context document from the gathered information.\n\n## Original Problem\nIn the promiment field of Quantum Error Correction (QEC), the research is now focusing on Bivariate Bycicle (BB) codes since they provide a better alternatives to the 0 rate of surface code.\nEven tho BB codes are not asymptotically good codes, they're implementation is the next step in Quantum Hardware to let some of those quantum algorithm to achieve quantum superiority\n\nB...",
+      "response_preview": "This document provides a comprehensive synthesis of the research regarding **Photonic Decoding for Bivariate Bicycle (BB) Quantum Error Correction Codes**. It is designed to guide an AI coding agent in developing a sub-microsecond decoding solution using optical computing primitives.\n\n---\n\n## 1. Problem Analysis: The \"Latency Wall\"\nThe primary bottleneck in Quantum Error Correction (QEC) is the **Decoding Cycle**. \n*   **The Constraint:** Qubits decohere on a microsecond ($\\mu s$) scale. For fau...",
+      "duration_sec": 18.42,
+      "prompt_tokens": 26800,
+      "completion_tokens": 1538,
+      "total_tokens": 28338,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T14:02:34.018998",
+      "model": "models/gemini-3-flash-preview",
+      "purpose": "general",
+      "prompt_preview": "You are a test case generator. Create comprehensive Python tests for the given problem.\n\n## Problem Description\nIn the promiment field of Quantum Error Correction (QEC), the research is now focusing on Bivariate Bycicle (BB) codes since they provide a better alternatives to the 0 rate of surface code.\nEven tho BB codes are not asymptotically good codes, they're implementation is the next step in Quantum Hardware to let some of those quantum algorithm to achieve quantum superiority\n\nBB codes, as ...",
+      "response_preview": "```python\nimport random\n\ndef run_tests():\n    \"\"\"\n    Comprehensive test suite for Photonic Decoding of Bivariate Bicycle (BB) Codes.\n    Tests matrix properties, syndrome calculation, noise modeling, and decoder accuracy.\n    \"\"\"\n    results = {\"passed\": 0, \"total\": 0, \"details\": \"\"}\n\n    def assert_test(name, condition):\n        results[\"total\"] += 1\n        if condition:\n            results[\"passed\"] += 1\n            results[\"details\"] += f\"PASS: {name}\\n\"\n        else:\n            results[\"d...",
+      "duration_sec": 27.23,
+      "prompt_tokens": 2264,
+      "completion_tokens": 1923,
+      "total_tokens": 4187,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T14:03:23.208500",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an expert Python programmer. Generate a solution for the following problem.\n\n## Problem Context\nThis document provides a comprehensive synthesis of the research regarding **Photonic Decoding for Bivariate Bicycle (BB) Quantum Error Correction Codes**. It is designed to guide an AI coding agent in developing a sub-microsecond decoding solution using optical computing primitives.\n\n---\n\n## 1. Problem Analysis: The \"Latency Wall\"\nThe primary bottleneck in Quantum Error Correction (QEC) is th...",
+      "response_preview": "```python\nimport numpy as np\nfrom scipy.sparse import csr_matrix, find\nimport math\n\n# --- 1. BB Code Generation (Simplified for demonstration) ---\n# A BB code is defined by H_X = (A | B) and H_Z = (B^T | A^T).\n# For CSS codes, we require H_X H_Z^T = 0 (mod 2).\n# If A and B are circulant matrices, they commute (AB = BA).\n# Then H_X H_Z^T = (A | B) @ (B^T | A^T)^T = (A | B) @ (B | A) = AB + BA (mod 2).\n# Since A and B are circulant and thus commute, AB = BA.\n# Therefore, AB + BA = 0 (mod 2) is alw...",
+      "duration_sec": 49.19,
+      "prompt_tokens": 1487,
+      "completion_tokens": 4160,
+      "total_tokens": 5647,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T14:03:45.910069",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document provides a comprehensive synthesis of the research regarding **Photonic Decoding for Bivariate Bicycle (BB) Quantum Error Correction Codes**. It is designed to guide an AI coding agent in developing a sub-microsecond decoding solution using optical computing primitives.\n\n---\n\n## 1. Problem Analysis: The \"Latency Wall\"\nThe primary bottleneck in Quantum Error Correction (QEC) is the **De...",
+      "response_preview": "```python\nimport numpy as np\nimport math\n\n# --- 1. BB Code Generation (Simplified for demonstration) ---\n# A BB code is defined by H_X = (A | B) and H_Z = (B^T | A^T).\n# For CSS codes, we require H_X H_Z^T = 0 (mod 2).\n# If A and B are circulant matrices, they commute (AB = BA).\n# Then H_X H_Z^T = (A | B) @ (B^T | A^T)^T = (A | B) @ (B | A) = AB + BA (mod 2).\n# Since A and B are circulant and thus commute, AB = BA.\n# Therefore, AB + BA = 0 (mod 2) is always satisfied for circulant A, B.\n# We wil...",
+      "duration_sec": 21.17,
+      "prompt_tokens": 5356,
+      "completion_tokens": 4285,
+      "total_tokens": 9641,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T14:03:52.239471",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document provides a comprehensive synthesis of the research regarding **Photonic Decoding for Bivariate Bicycle (BB) Quantum Error Correction Codes**. It is designed to guide an AI coding agent in developing a sub-microsecond decoding solution using optical computing primitives.\n\n---\n\n## 1. Problem Analysis: The \"Latency Wall\"\nThe primary bottleneck in Quantum Error Correction (QEC) is the **De...",
+      "response_preview": "```python\nimport numpy as np\n# Removed: from scipy.sparse import csr_matrix, find\nimport math\n\n# --- 1. BB Code Generation (Simplified for demonstration) ---\n# A BB code is defined by H_X = (A | B) and H_Z = (B^T | A^T).\n# For CSS codes, we require H_X H_Z^T = 0 (mod 2).\n# If A and B are circulant matrices, they commute (AB = BA).\n# Then H_X H_Z^T = (A | B) @ (B^T | A^T)^T = (A | B) @ (B | A) = AB + BA (mod 2).\n# Since A and B are circulant and thus commute, AB = BA.\n# Therefore, AB + BA = 0 (mo...",
+      "duration_sec": 27.4,
+      "prompt_tokens": 5355,
+      "completion_tokens": 4189,
+      "total_tokens": 9544,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T14:04:14.064823",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document provides a comprehensive synthesis of the research regarding **Photonic Decoding for Bivariate Bicycle (BB) Quantum Error Correction Codes**. It is designed to guide an AI coding agent in developing a sub-microsecond decoding solution using optical computing primitives.\n\n---\n\n## 1. Problem Analysis: The \"Latency Wall\"\nThe primary bottleneck in Quantum Error Correction (QEC) is the **De...",
+      "response_preview": "```python\nimport numpy as np\n# from scipy.sparse import csr_matrix, find # Removed scipy dependency\nimport math\n\n# --- 1. BB Code Generation (Simplified for demonstration) ---\n# A BB code is defined by H_X = (A | B) and H_Z = (B^T | A^T).\n# For CSS codes, we require H_X H_Z^T = 0 (mod 2).\n# If A and B are circulant matrices, they commute (AB = BA).\n# Then H_X H_Z^T = (A | B) @ (B^T | A^T)^T = (A | B) @ (B | A) = AB + BA (mod 2).\n# Since A and B are circulant and thus commute, AB = BA.\n# Therefor...",
+      "duration_sec": 21.03,
+      "prompt_tokens": 5356,
+      "completion_tokens": 4237,
+      "total_tokens": 9593,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-03T14:04:41.031366",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document provides a comprehensive synthesis of the research regarding **Photonic Decoding for Bivariate Bicycle (BB) Quantum Error Correction Codes**. It is designed to guide an AI coding agent in developing a sub-microsecond decoding solution using optical computing primitives.\n\n---\n\n## 1. Problem Analysis: The \"Latency Wall\"\nThe primary bottleneck in Quantum Error Correction (QEC) is the **De...",
+      "response_preview": "```python\nimport numpy as np\nimport math\n\n# --- 1. BB Code Generation (Simplified for demonstration) ---\n# A BB code is defined by H_X = (A | B) and H_Z = (B^T | A^T).\n# For CSS codes, we require H_X H_Z^T = 0 (mod 2).\n# If A and B are circulant matrices, they commute (AB = BA).\n# Then H_X H_Z^T = (A | B) @ (B^T | A^T)^T = (A | B) @ (B | A) = AB + BA (mod 2).\n# Since A and B are circulant and thus commute, AB = BA.\n# Therefore, AB + BA = 0 (mod 2) is always satisfied for circulant A, B.\n# We wil...",
+      "duration_sec": 47.89,
+      "prompt_tokens": 5355,
+      "completion_tokens": 4037,
+      "total_tokens": 9392,
+      "success": true,
+      "error": null
+    }
+  ],
+  "evolution_history": [
+    {
+      "timestamp": "2026-01-03T14:03:53.033790",
+      "generation": 1,
+      "candidates_count": 2,
+      "best_score": 0.0,
+      "avg_score": 0.0,
+      "all_scores": [
+        0.0,
+        0.0
+      ],
+      "best_code_preview": "import numpy as np\nfrom scipy.sparse import csr_matrix, find\nimport math\n\n# --- 1. BB Code Generation (Simplified for demonstration) ---\n# A BB code is defined by H_X = (A | B) and H_Z = (B^T | A^T).\n# For CSS codes, we require H_X H_Z^T = 0 (mod 2).\n# If A and B are circulant matrices, they commute..."
+    },
+    {
+      "timestamp": "2026-01-03T14:04:41.544366",
+      "generation": 2,
+      "candidates_count": 2,
+      "best_score": 0.0,
+      "avg_score": 0.0,
+      "all_scores": [
+        0.0,
+        0.0
+      ],
+      "best_code_preview": "import numpy as np\nfrom scipy.sparse import csr_matrix, find\nimport math\n\n# --- 1. BB Code Generation (Simplified for demonstration) ---\n# A BB code is defined by H_X = (A | B) and H_Z = (B^T | A^T).\n# For CSS codes, we require H_X H_Z^T = 0 (mod 2).\n# If A and B are circulant matrices, they commute..."
+    }
+  ],
+  "summary": {
+    "total_llm_calls": 8,
+    "total_tokens": 77650,
+    "total_llm_duration_sec": 221.59,
+    "total_generations": 2,
+    "final_score": 0.0,
+    "final_code_preview": "import numpy as np\nfrom scipy.sparse import csr_matrix, find\nimport math\n\n# --- 1. BB Code Generation (Simplified for demonstration) ---\n# A BB code is defined by H_X = (A | B) and H_Z = (B^T | A^T).\n# For CSS codes, we require H_X H_Z^T = 0 (mod 2).\n# If A and B are circulant matrices, they commute (AB = BA).\n# Then H_X H_Z^T = (A | B) @ (B^T | A^T)^T = (A | B) @ (B | A) = AB + BA (mod 2).\n# Since A and B are circulant and thus commute, AB = BA.\n# Therefore, AB + BA = 0 (mod 2) is always satisf..."
+  }
+}

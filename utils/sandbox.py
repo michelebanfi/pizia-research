@@ -6,11 +6,14 @@ Based on patterns from poetiq-arc-agi-solver/arc_agi/sandbox.py.
 """
 
 import asyncio
+import concurrent.futures
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import textwrap
+import time
 from dataclasses import dataclass
 from typing import Any
 
@@ -30,6 +33,39 @@ class ExecutionResult:
     raw_result: dict[str, Any] | None = None
 
 
+def _run_subprocess_sync(script_path: str, cwd: str, timeout: float) -> tuple[int, str, str, float]:
+    """
+    Run the subprocess synchronously. This is called from a thread pool
+    to avoid Windows asyncio subprocess issues.
+    
+    Returns: (returncode, stdout, stderr, execution_time)
+    """
+    start_time = time.time()
+    
+    try:
+        result = subprocess.run(
+            [sys.executable, script_path],
+            capture_output=True,
+            cwd=cwd,
+            timeout=timeout,
+            env={
+                **os.environ,
+                "PYTHONHASHSEED": "0",
+                "PYTHONDONTWRITEBYTECODE": "1",
+            },
+        )
+        
+        execution_time = time.time() - start_time
+        stdout = result.stdout.decode("utf-8", errors="replace")
+        stderr = result.stderr.decode("utf-8", errors="replace")
+        
+        return (result.returncode, stdout, stderr, execution_time)
+        
+    except subprocess.TimeoutExpired:
+        execution_time = time.time() - start_time
+        return (-1, "", "Execution timed out", execution_time)
+
+
 async def run(
     code: str,
     tests: str,
@@ -37,6 +73,9 @@ async def run(
 ) -> ExecutionResult:
     """
     Run user code against test cases in an isolated subprocess.
+    
+    Uses synchronous subprocess.run in a thread pool to avoid Windows
+    asyncio subprocess compatibility issues.
     
     Args:
         code: The Python code to execute
@@ -56,34 +95,23 @@ async def run(
         with open(script_path, "w", encoding="utf-8") as f:
             f.write(script)
         
-        # Run in subprocess
-        proc = await asyncio.create_subprocess_exec(
-            sys.executable,
-            script_path,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-            cwd=td,
-            env={
-                **os.environ,
-                "PYTHONHASHSEED": "0",  # Reproducible hashing
-                "PYTHONDONTWRITEBYTECODE": "1",
-            },
-        )
-        
-        start_time = asyncio.get_event_loop().time()
-        
-        try:
-            stdout, stderr = await asyncio.wait_for(
-                proc.communicate(),
-                timeout=timeout,
+        # Run subprocess in thread pool (avoids Windows asyncio issues)
+        loop = asyncio.get_event_loop()
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            returncode, stdout_text, stderr_text, execution_time = await loop.run_in_executor(
+                pool,
+                _run_subprocess_sync,
+                script_path,
+                td,
+                timeout,
             )
-        except asyncio.TimeoutError:
-            try:
-                proc.kill()
-                await proc.wait()
-            except ProcessLookupError:
-                pass
-            
+        
+        # Trim output
+        stdout_text = stdout_text[:SANDBOX_MAX_OUTPUT_CHARS]
+        stderr_text = stderr_text[:SANDBOX_MAX_OUTPUT_CHARS]
+        
+        # Check for timeout
+        if returncode == -1 and "timed out" in stderr_text:
             return ExecutionResult(
                 success=False,
                 output="",
@@ -94,18 +122,12 @@ async def run(
                 execution_time=timeout,
             )
         
-        end_time = asyncio.get_event_loop().time()
-        execution_time = end_time - start_time
-        
-        stdout_text = stdout.decode("utf-8", errors="replace")[:SANDBOX_MAX_OUTPUT_CHARS]
-        stderr_text = stderr.decode("utf-8", errors="replace")[:SANDBOX_MAX_OUTPUT_CHARS]
-        
         # Check for runtime errors
-        if proc.returncode != 0:
+        if returncode != 0:
             return ExecutionResult(
                 success=False,
                 output=stdout_text,
-                errors=stderr_text or f"Exit code: {proc.returncode}",
+                errors=stderr_text or f"Exit code: {returncode}",
                 score=0.0,
                 tests_passed=0,
                 tests_total=0,
