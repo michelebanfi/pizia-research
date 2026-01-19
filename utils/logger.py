@@ -5,6 +5,8 @@ Provides JSON-based logging with run tracking for:
 - Debugging during development
 - Post-run analysis by the researcher
 - Tracking LLM calls, costs, and evolution progress
+
+Also saves all artifacts (inputs, generated code, test results) to a run folder.
 """
 
 import json
@@ -17,6 +19,10 @@ from typing import Any, Literal
 LOGS_DIR = Path("logs")
 LOGS_DIR.mkdir(exist_ok=True)
 
+# Runs directory (for artifacts)
+RUNS_DIR = Path("runs")
+RUNS_DIR.mkdir(exist_ok=True)
+
 
 LogLevel = Literal["DEBUG", "INFO", "WARN", "ERROR"]
 
@@ -26,6 +32,7 @@ class RunLogger:
     Structured logger for a single run.
     
     Creates a JSON log file per run with all events, LLM calls, and results.
+    Also creates a folder with all artifacts (inputs, iterations, results).
     """
     
     def __init__(self, run_name: str | None = None):
@@ -36,8 +43,22 @@ class RunLogger:
             run_name: Optional name for the run. Defaults to timestamp.
         """
         self.run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.run_name = run_name or f"run_{self.run_id}"
+        self.run_name = run_name or f"evolution_{self.run_id}"
         self.log_file = LOGS_DIR / f"{self.run_name}.json"
+        
+        # Create run artifacts folder
+        self.run_dir = RUNS_DIR / self.run_name
+        self.run_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create subfolders
+        self.inputs_dir = self.run_dir / "inputs"
+        self.inputs_dir.mkdir(exist_ok=True)
+        
+        self.iterations_dir = self.run_dir / "iterations"
+        self.iterations_dir.mkdir(exist_ok=True)
+        
+        self.results_dir = self.run_dir / "results"
+        self.results_dir.mkdir(exist_ok=True)
         
         # Initialize log structure
         self.log_data = {
@@ -51,6 +72,7 @@ class RunLogger:
             "llm_calls": [],
             "evolution_history": [],
             "summary": {},
+            "artifacts_dir": str(self.run_dir),
         }
         
         self._save()
@@ -62,6 +84,159 @@ class RunLogger:
     
     def _timestamp(self) -> str:
         return datetime.now().isoformat()
+    
+    def _save_artifact(self, subdir: Path, filename: str, content: str) -> Path:
+        """Save an artifact file and return its path."""
+        filepath = subdir / filename
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(content)
+        return filepath
+    
+    # =========================================================================
+    # Artifact Saving Methods
+    # =========================================================================
+    
+    def save_input_problem(self, problem: str):
+        """Save the input problem description."""
+        self._save_artifact(self.inputs_dir, "problem.txt", problem)
+        self.debug(f"Saved input problem to {self.inputs_dir / 'problem.txt'}")
+    
+    def save_input_urls(self, urls: list[str]):
+        """Save the input URLs."""
+        content = "\n".join(urls)
+        self._save_artifact(self.inputs_dir, "urls.txt", content)
+        self.debug(f"Saved {len(urls)} URLs to {self.inputs_dir / 'urls.txt'}")
+    
+    def save_input_file(self, filename: str, content: str | bytes):
+        """Save an uploaded input file."""
+        if isinstance(content, bytes):
+            filepath = self.inputs_dir / filename
+            with open(filepath, "wb") as f:
+                f.write(content)
+        else:
+            self._save_artifact(self.inputs_dir, filename, content)
+        self.debug(f"Saved input file: {filename}")
+    
+    def save_research_context(self, context_md: str):
+        """Save the synthesized research context."""
+        self._save_artifact(self.inputs_dir, "research_context.md", context_md)
+        self.debug("Saved research context")
+    
+    def save_search_queries(self, queries: list[str]):
+        """Save the generated search queries."""
+        content = "\n".join(f"- {q}" for q in queries)
+        self._save_artifact(self.inputs_dir, "search_queries.txt", content)
+        self.debug(f"Saved {len(queries)} search queries")
+    
+    def save_tests(self, tests_py: str):
+        """Save the generated test cases."""
+        self._save_artifact(self.inputs_dir, "tests.py", tests_py)
+        self.debug("Saved test cases")
+    
+    def save_iteration(
+        self,
+        generation: int,
+        candidate_id: int,
+        code: str,
+        score: float,
+        tests_passed: int,
+        tests_total: int,
+        feedback: str,
+        is_best: bool = False,
+    ):
+        """
+        Save a single iteration/candidate result.
+        
+        Args:
+            generation: Generation number (1-indexed)
+            candidate_id: Candidate number within generation (1-indexed)
+            code: The generated code
+            score: Test score (0.0 to 1.0)
+            tests_passed: Number of tests passed
+            tests_total: Total number of tests
+            feedback: Execution feedback/errors
+            is_best: Whether this is the best candidate of the generation
+        """
+        gen_dir = self.iterations_dir / f"gen_{generation:02d}"
+        gen_dir.mkdir(exist_ok=True)
+        
+        # Save the code
+        code_filename = f"candidate_{candidate_id:02d}.py"
+        if is_best:
+            code_filename = f"candidate_{candidate_id:02d}_BEST.py"
+        self._save_artifact(gen_dir, code_filename, code)
+        
+        # Save the results
+        results = {
+            "generation": generation,
+            "candidate_id": candidate_id,
+            "score": score,
+            "tests_passed": tests_passed,
+            "tests_total": tests_total,
+            "is_best": is_best,
+            "feedback": feedback,
+            "timestamp": self._timestamp(),
+        }
+        results_filename = f"candidate_{candidate_id:02d}_results.json"
+        self._save_artifact(gen_dir, results_filename, json.dumps(results, indent=2))
+        
+        self.debug(f"Saved iteration gen={generation} candidate={candidate_id} score={score:.2%}")
+    
+    def save_generation_summary(
+        self,
+        generation: int,
+        best_score: float,
+        all_scores: list[float],
+        best_code: str,
+    ):
+        """Save a summary of the generation."""
+        gen_dir = self.iterations_dir / f"gen_{generation:02d}"
+        gen_dir.mkdir(exist_ok=True)
+        
+        summary = {
+            "generation": generation,
+            "best_score": best_score,
+            "avg_score": sum(all_scores) / len(all_scores) if all_scores else 0,
+            "all_scores": all_scores,
+            "candidates_count": len(all_scores),
+            "timestamp": self._timestamp(),
+        }
+        self._save_artifact(gen_dir, "summary.json", json.dumps(summary, indent=2))
+        
+        # Also save best code at top level of generation
+        self._save_artifact(gen_dir, "best.py", best_code)
+    
+    def save_final_result(
+        self,
+        success: bool,
+        final_score: float | None,
+        final_code: str | None,
+        total_generations: int,
+    ):
+        """Save the final result of the evolution."""
+        # Save final code
+        if final_code:
+            self._save_artifact(self.results_dir, "final_solution.py", final_code)
+        
+        # Save summary
+        summary = {
+            "success": success,
+            "final_score": final_score,
+            "total_generations": total_generations,
+            "timestamp": self._timestamp(),
+            "run_id": self.run_id,
+        }
+        self._save_artifact(self.results_dir, "summary.json", json.dumps(summary, indent=2))
+        
+        self.info(f"Final results saved to {self.results_dir}")
+    
+    # =========================================================================
+    # Original Logging Methods
+    # =========================================================================
+    
+    # =========================================================================
+    # Original Logging Methods
+    # =========================================================================
     
     def set_config(self, config: dict[str, Any]):
         """Record run configuration."""

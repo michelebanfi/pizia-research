@@ -337,6 +337,26 @@ class EvolverAgent:
         population.add(initial_solution)
         history.append(initial_solution)
         
+        # Save initial solution artifact
+        logger = get_logger()
+        if logger:
+            logger.save_iteration(
+                generation=0,
+                candidate_id=1,
+                code=initial_code,
+                score=initial_result.score,
+                tests_passed=initial_result.tests_passed,
+                tests_total=initial_result.tests_total,
+                feedback=initial_result.errors or initial_result.output,
+                is_best=True,
+            )
+            logger.save_generation_summary(
+                generation=0,
+                best_score=initial_result.score,
+                all_scores=[initial_result.score],
+                best_code=initial_code,
+            )
+        
         state = EvolutionState(
             generation=0,
             best_solution=initial_solution,
@@ -367,11 +387,13 @@ class EvolverAgent:
             
             # Evaluate all candidates
             best_this_gen: Solution | None = None
-            
+            candidate_id = 0
+
             for candidate_code in candidates:
                 if not candidate_code.strip():
                     continue
                 
+                candidate_id += 1
                 result = await run(candidate_code, tests)
                 
                 solution = Solution(
@@ -388,8 +410,23 @@ class EvolverAgent:
                 population.add(solution)
                 history.append(solution)
                 
-                if best_this_gen is None or solution.score > best_this_gen.score:
+                is_best = best_this_gen is None or solution.score > best_this_gen.score
+                if is_best:
                     best_this_gen = solution
+                
+                # Save iteration artifact
+                logger = get_logger()
+                if logger:
+                    logger.save_iteration(
+                        generation=gen,
+                        candidate_id=candidate_id,
+                        code=candidate_code,
+                        score=result.score,
+                        tests_passed=result.tests_passed,
+                        tests_total=result.tests_total,
+                        feedback=result.errors or result.output,
+                        is_best=is_best,
+                    )
             
             # Update state
             state = EvolutionState(
@@ -403,7 +440,7 @@ class EvolverAgent:
             if on_generation:
                 on_generation(state)
             
-            # Log generation progress
+            # Log generation progress and save summary
             logger = get_logger()
             if logger and best_this_gen:
                 all_scores = [s.score for s in history if s.generation == gen]
@@ -413,6 +450,13 @@ class EvolverAgent:
                     best_score=population.best.score if population.best else 0,
                     best_code_preview=population.best.code if population.best else "",
                     all_scores=all_scores,
+                )
+                # Save generation summary artifact
+                logger.save_generation_summary(
+                    generation=gen,
+                    best_score=population.best.score if population.best else 0,
+                    all_scores=all_scores,
+                    best_code=population.best.code if population.best else "",
                 )
             
             # Check early stop
@@ -527,9 +571,21 @@ class EvolverAgent:
         """Create final evolution result."""
         duration = (datetime.now() - start_time).total_seconds()
         
+        total_generations = max(s.generation for s in history) if history else 0
+        
+        # Save final result artifact
+        logger = get_logger()
+        if logger and population.best:
+            logger.save_final_result(
+                success=status == "success",
+                final_score=population.best.score,
+                final_code=population.best.code,
+                total_generations=total_generations,
+            )
+        
         return EvolutionResult(
             best_solution=population.best,
-            total_generations=max(s.generation for s in history) if history else 0,
+            total_generations=total_generations,
             total_candidates_evaluated=len(history),
             success=status == "success",
             history=history,

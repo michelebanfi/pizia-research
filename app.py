@@ -414,6 +414,11 @@ async def run_evolution_pipeline(
     })
     logger.info("Pipeline started", phase="init")
     
+    # Save input artifacts
+    logger.save_input_problem(problem)
+    if urls:
+        logger.save_input_urls(urls)
+    
     try:
         # Phase 1: Research
         st.session_state.research_status = "researching"
@@ -425,7 +430,10 @@ async def run_evolution_pipeline(
         file_data = []
         if files:
             for f in files:
-                file_data.append((f.name, f.read()))
+                content = f.read()
+                file_data.append((f.name, content))
+                # Save uploaded file as artifact
+                logger.save_input_file(f.name, content)
         
         # Run research
         research_output = await researcher.research(
@@ -438,6 +446,12 @@ async def run_evolution_pipeline(
         st.session_state.context_md = research_output.context_md
         st.session_state.tests_py = research_output.tests_py
         st.session_state.search_queries = research_output.search_queries
+        
+        # Save research artifacts
+        logger.save_research_context(research_output.context_md)
+        logger.save_tests(research_output.tests_py)
+        if research_output.search_queries:
+            logger.save_search_queries(research_output.search_queries)
         
         # Phase 2: Evolution
         st.session_state.research_status = "evolving"
