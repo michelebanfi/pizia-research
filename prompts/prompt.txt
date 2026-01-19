@@ -1,0 +1,192 @@
+In the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density
+Parity Checks codes (qLDPC codes). These error correcting codes are divided into different families.
+
+The most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate
+i.e. they do not scale well, they're considered the next step for the reaseach.
+
+They mainly employ sparness in and a good rate (even if fixed).
+
+The decoding algorithms used to decode qLDPC, are the same as the ones used for LDPC, so mainly
+Belief Propagation (wheather Min-Sum or Prod-Sum implementation) followed by OSD. This decoding paradigm,
+BP + OSD is the gold standard in order to achieve good decoding performances. 
+
+My main research question is, is BP + OSD really the best we can do? My idea stems from the fact that
+in qLDPC, and not in LDPC, theres a phenomenon called "degeneracy" this phenomenon could potentially allow us to
+correct wrongly identify errors, that is, thanks to the residual of the correction applied to the stabilizer state
+which can commute with a logical operator and actually leaving the state unchanged. 
+
+Taken this fact, degeneracy, my question is, during BP, instead of trying to identify the error that generated the measured syndrome
+(let's immagine a code capacity noise model) what if we "simply" need to identify the closest logical operator upon we can commute?
+
+I've attached a paper by Vasic which should give you the rigorus ground you need.
+
+You can take inspiration from this code i've used to generate the BB matrices that you need to work with:
+
+import numpy as np
+from qldpc import codes
+from sympy.abc import x, y
+
+# Define codes with their polynomial parameters
+# A = x^a1 + y^a2 + y^a3
+# B = y^b1 + x^b2 + x^b3
+
+code_definitions = [
+    {
+        "code": codes.BBCode(
+            {x: 6, y: 6},
+            x**3 + y + y**2,
+            y**3 + x + x**2,
+        ),
+        "name": "[[72, 12, 6]]",
+        "distance": 6,
+        # Polynomial parameters for A = x^a1 + y^a2 + y^a3
+        "ell": 6, "m": 6,
+        "a_x_powers": [3],      # x powers in A
+        "a_y_powers": [1, 2],   # y powers in A
+        "b_y_powers": [3],      # y powers in B
+        "b_x_powers": [1, 2],   # x powers in B
+    },
+    {
+        "code": codes.BBCode(
+            {x: 15, y: 3},
+            x**9 + y + y**2,
+            1 + x**2 + x**7,
+        ),
+        "name": "[[90, 8, 10]]",
+        "distance": 10,
+        "ell": 15, "m": 3,
+        "a_x_powers": [9],
+        "a_y_powers": [1, 2],
+        "b_y_powers": [0],       # y^0 = 1
+        "b_x_powers": [2, 7],
+    },
+    {
+        "code": codes.BBCode(
+            {x: 9, y: 6},
+            x**3 + y + y**2,
+            y**3 + x + x**2,
+        ),
+        "name": "[[108, 8, 10]]",
+        "distance": 10,
+        "ell": 9, "m": 6,
+        "a_x_powers": [3],
+        "a_y_powers": [1, 2],
+        "b_y_powers": [3],
+        "b_x_powers": [1, 2],
+    },
+    {
+        "code": codes.BBCode(
+            {x: 12, y: 6},
+            x**3 + y + y**2,
+            y**3 + x + x**2,
+        ),
+        "name": "[[144, 12, 12]]",
+        "distance": 12,
+        "ell": 12, "m": 6,
+        "a_x_powers": [3],
+        "a_y_powers": [1, 2],
+        "b_y_powers": [3],
+        "b_x_powers": [1, 2],
+    },
+    {
+        "code": codes.BBCode(
+            {x: 12, y: 12},
+            x**3 + y**2 + y**7,
+            y**3 + x + x**2,
+        ),
+        "name": "[[288, 12, 18]]",
+        "distance": 18,
+        "ell": 12, "m": 12,
+        "a_x_powers": [3],
+        "a_y_powers": [2, 7],
+        "b_y_powers": [3],
+        "b_x_powers": [1, 2],
+    },
+]
+
+
+def verify_code_structure(code_def):
+    """Verify that the component matrices reconstruct Hx correctly."""
+    ell = code_def["ell"]
+    m = code_def["m"]
+    n2 = ell * m
+    
+    # Build component matrices
+    # x^k corresponds to kron(roll(I_ell, k), I_m)
+    # y^k corresponds to kron(I_ell, roll(I_m, k))
+    
+    I_ell = np.eye(ell, dtype=int)
+    I_m = np.eye(m, dtype=int)
+    
+    A_components = []
+    for p in code_def["a_x_powers"]:
+        A_components.append(np.kron(np.roll(I_ell, p, axis=1), I_m))
+    for p in code_def["a_y_powers"]:
+        A_components.append(np.kron(I_ell, np.roll(I_m, p, axis=1)))
+    
+    B_components = []
+    for p in code_def["b_y_powers"]:
+        B_components.append(np.kron(I_ell, np.roll(I_m, p, axis=1)))
+    for p in code_def["b_x_powers"]:
+        B_components.append(np.kron(np.roll(I_ell, p, axis=1), I_m))
+    
+    A = sum(A_components) % 2
+    B = sum(B_components) % 2
+    
+    Hx_reconstructed = np.hstack([A, B])
+    Hx_original = np.array(code_def["code"].matrix_x)
+    
+    if np.array_equal(Hx_reconstructed, Hx_original):
+        print(f"{code_def['name']}: Component matrices verified")
+        return True
+    else:
+        print(f"{code_def['name']}: Component matrices DON'T match!")
+        print(f"Difference: {np.sum(Hx_reconstructed != Hx_original)} elements")
+        return False
+
+
+if __name__ == "__main__":
+    print("Generating BB code matrices with component parameters...")
+    print("=" * 60)
+    
+    for code_def in code_definitions:
+        code = code_def["code"]
+        Hx = np.array(code.matrix_x)
+        Hz = np.array(code.matrix_z)
+        
+        logicals = code.get_logical_ops()
+        k = logicals.shape[0] // 2
+        n = Hx.shape[1]
+        
+        Lx = np.array(logicals[:k, :n])
+        Lz = np.array(logicals[k:, n:])
+        
+        print(f"\n{code_def['name']}:")
+        print(f"  Hx shape: {Hx.shape}, k: {k}")
+        
+        # Verify component structure
+        verify_code_structure(code_def)
+        
+        # Save with component parameters
+        np.savez(
+            f"codes/{code_def['name']}.npz",
+            Hx=Hx,
+            Hz=Hz,
+            Lx=Lx,
+            Lz=Lz,
+            distance=code_def["distance"],
+            # Component parameters for circuit construction
+            ell=code_def["ell"],
+            m=code_def["m"],
+            a_x_powers=np.array(code_def["a_x_powers"]),
+            a_y_powers=np.array(code_def["a_y_powers"]),
+            b_y_powers=np.array(code_def["b_y_powers"]),
+            b_x_powers=np.array(code_def["b_x_powers"]),
+        )
+        print(f"  Saved to codes/{code_def['name']}.npz")
+    
+    print("\n" + "=" * 60)
+    print("Done!")
+
+
+For testing purposed, focus on just the smaller code

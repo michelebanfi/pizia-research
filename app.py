@@ -50,7 +50,7 @@ init_session_state()
 st.markdown("""
 <style>
     .stApp {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        background: #ffffff;
     }
     
     .main-header {
@@ -72,19 +72,18 @@ st.markdown("""
         font-size: 0.8rem;
     }
     
-    .status-idle { background: #2d3748; color: #a0aec0; }
-    .status-researching { background: #2b6cb0; color: #bee3f8; }
-    .status-evolving { background: #6b46c1; color: #d6bcfa; }
-    .status-complete { background: #276749; color: #9ae6b4; }
-    .status-error { background: #c53030; color: #feb2b2; }
+    .status-idle { background: #e2e8f0; color: #4a5568; }
+    .status-researching { background: #bee3f8; color: #2b6cb0; }
+    .status-evolving { background: #e9d8fd; color: #6b46c1; }
+    .status-complete { background: #c6f6d5; color: #276749; }
+    .status-error { background: #fed7d7; color: #c53030; }
     
     .evolution-card {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 1.5rem;
         margin: 1rem 0;
-        backdrop-filter: blur(10px);
     }
     
     .score-display {
@@ -96,18 +95,20 @@ st.markdown("""
     }
     
     .metric-card {
-        background: rgba(255, 255, 255, 0.08);
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
         border-radius: 10px;
         padding: 1rem;
         text-align: center;
     }
     
     .search-query {
-        background: rgba(59, 130, 246, 0.2);
+        background: #ebf8ff;
         border-left: 3px solid #3b82f6;
         padding: 0.5rem 1rem;
         margin: 0.5rem 0;
         border-radius: 0 8px 8px 0;
+        color: #2d3748;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -119,7 +120,7 @@ st.markdown("""
 
 st.markdown('<h1 class="main-header">🧬 AI Research Agent</h1>', unsafe_allow_html=True)
 st.markdown(
-    '<p style="text-align: center; color: #a0aec0; margin-bottom: 2rem;">'
+    '<p style="text-align: center; color: #4a5568; margin-bottom: 2rem;">'
     'Evolutionary coding agent powered by AlphaEvolve architecture • '
     'Parallel.ai DeepSearch • Poetiq async patterns'
     '</p>',

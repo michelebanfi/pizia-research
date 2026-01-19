@@ -57,6 +57,7 @@ GOOGLE_CHEAP_MODELS: list[ModelConfig] = [
         model_type="cheap",
     ),
 ]
+# gemini-flash-lite-latest
 
 GOOGLE_REASONING_MODELS: list[ModelConfig] = [
     ModelConfig(
@@ -66,7 +67,7 @@ GOOGLE_REASONING_MODELS: list[ModelConfig] = [
         model_type="reasoning",
     ),
 ]
-
+# gemini-flash-latest
 
 # =============================================================================
 # OPENROUTER MODELS (Production)

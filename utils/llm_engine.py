@@ -82,87 +82,120 @@ class LLMEngine:
         max_tokens: int | None = None,
         timeout: float = 300.0,
     ) -> LLMResponse:
-        """Make an async call to Google AI Studio."""
-        start_time = asyncio.get_event_loop().time()
+        """Make an async call to Google AI Studio with retry logic for transient errors."""
+        from google.genai import types
         
-        try:
-            client = self._get_google_client()
+        client = self._get_google_client()
+        
+        # Convert messages to Google format
+        # Google uses a simpler format: system instruction + contents
+        system_instruction = None
+        contents = []
+        
+        for msg in messages:
+            if msg["role"] == "system":
+                system_instruction = msg["content"]
+            elif msg["role"] == "user":
+                contents.append(msg["content"])
+            elif msg["role"] == "assistant":
+                # For multi-turn, we'd need to handle this differently
+                # For now, just append to contents
+                contents.append(f"Assistant: {msg['content']}")
+        
+        # Combine all user messages into one content string
+        combined_content = "\n\n".join(contents)
+        
+        # Build generation config
+        generation_config = types.GenerateContentConfig(
+            temperature=temperature,
+            max_output_tokens=max_tokens,
+        )
+        
+        if system_instruction:
+            generation_config.system_instruction = system_instruction
+        
+        # Retry loop with exponential backoff for transient errors (503, 429, etc.)
+        max_retries = 5
+        base_delay = 10  # Start with 10 seconds for 503 errors (model overloaded)
+        
+        for attempt in range(1, max_retries + 1):
+            start_time = asyncio.get_event_loop().time()
             
-            # Convert messages to Google format
-            # Google uses a simpler format: system instruction + contents
-            system_instruction = None
-            contents = []
-            
-            for msg in messages:
-                if msg["role"] == "system":
-                    system_instruction = msg["content"]
-                elif msg["role"] == "user":
-                    contents.append(msg["content"])
-                elif msg["role"] == "assistant":
-                    # For multi-turn, we'd need to handle this differently
-                    # For now, just append to contents
-                    contents.append(f"Assistant: {msg['content']}")
-            
-            # Combine all user messages into one content string
-            combined_content = "\n\n".join(contents)
-            
-            # Build generation config
-            from google.genai import types
-            
-            generation_config = types.GenerateContentConfig(
-                temperature=temperature,
-                max_output_tokens=max_tokens,
-            )
-            
-            if system_instruction:
-                generation_config.system_instruction = system_instruction
-            
-            # Run the sync call in a thread pool to make it async
-            loop = asyncio.get_event_loop()
-            response = await loop.run_in_executor(
-                None,
-                lambda: client.models.generate_content(
-                    model=model.name,
-                    contents=combined_content,
-                    config=generation_config,
+            try:
+                # Run the sync call in a thread pool to make it async
+                loop = asyncio.get_event_loop()
+                response = await loop.run_in_executor(
+                    None,
+                    lambda: client.models.generate_content(
+                        model=model.name,
+                        contents=combined_content,
+                        config=generation_config,
+                    )
                 )
-            )
-            
-            end_time = asyncio.get_event_loop().time()
-            duration = end_time - start_time
-            
-            # Extract text from response
-            content = response.text if hasattr(response, 'text') else str(response)
-            
-            # Try to get usage metadata if available
-            prompt_tokens = 0
-            completion_tokens = 0
-            if hasattr(response, 'usage_metadata'):
-                usage = response.usage_metadata
-                prompt_tokens = getattr(usage, 'prompt_token_count', 0)
-                completion_tokens = getattr(usage, 'candidates_token_count', 0)
-            
-            return LLMResponse(
-                content=content.strip(),
-                duration=duration,
-                prompt_tokens=prompt_tokens,
-                completion_tokens=completion_tokens,
-                model=model.full_name,
-                success=True,
-            )
-            
-        except Exception as e:
-            end_time = asyncio.get_event_loop().time()
-            duration = end_time - start_time
-            return LLMResponse(
-                content="",
-                duration=duration,
-                prompt_tokens=0,
-                completion_tokens=0,
-                model=model.full_name,
-                success=False,
-                error=str(e),
-            )
+                
+                end_time = asyncio.get_event_loop().time()
+                duration = end_time - start_time
+                
+                # Extract text from response
+                content = response.text if hasattr(response, 'text') else str(response)
+                
+                # Try to get usage metadata if available
+                prompt_tokens = 0
+                completion_tokens = 0
+                if hasattr(response, 'usage_metadata'):
+                    usage = response.usage_metadata
+                    prompt_tokens = getattr(usage, 'prompt_token_count', 0)
+                    completion_tokens = getattr(usage, 'candidates_token_count', 0)
+                
+                return LLMResponse(
+                    content=content.strip(),
+                    duration=duration,
+                    prompt_tokens=prompt_tokens,
+                    completion_tokens=completion_tokens,
+                    model=model.full_name,
+                    success=True,
+                )
+                
+            except Exception as e:
+                end_time = asyncio.get_event_loop().time()
+                duration = end_time - start_time
+                error_str = str(e)
+                
+                # Check if this is a retryable error (503, 429, 500, connection errors)
+                is_retryable = any(code in error_str for code in ['503', '429', '500', 'overloaded', 'UNAVAILABLE', 'rate limit', 'quota'])
+                
+                if is_retryable and attempt < max_retries:
+                    # Exponential backoff with jitter
+                    delay = base_delay * (2 ** (attempt - 1)) + (asyncio.get_event_loop().time() % 5)
+                    print(f"[Google API] Retryable error on attempt {attempt}/{max_retries}: {error_str[:100]}...")
+                    print(f"[Google API] Waiting {delay:.1f}s before retry...")
+                    await asyncio.sleep(delay)
+                    continue
+                
+                # Non-retryable error or max retries exceeded
+                if attempt == max_retries and is_retryable:
+                    print(f"[Google API] Max retries ({max_retries}) exceeded. Last error: {error_str[:100]}...")
+                
+                return LLMResponse(
+                    content="",
+                    duration=duration,
+                    prompt_tokens=0,
+                    completion_tokens=0,
+                    model=model.full_name,
+                    success=False,
+                    error=error_str,
+                )
+        
+        # Should not reach here, but safety return
+        return LLMResponse(
+            content="",
+            duration=0,
+            prompt_tokens=0,
+            completion_tokens=0,
+            model=model.full_name,
+            success=False,
+            error="Unexpected: retry loop exited without return",
+        )
     
     async def _call_openrouter(
         self,

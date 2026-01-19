@@ -1,0 +1,253 @@
+{
+  "run_id": "20260119_133843",
+  "run_name": "evolution_20260119_133843",
+  "started_at": "2026-01-19T13:38:43.750138",
+  "ended_at": "2026-01-19T13:46:41.909200",
+  "status": "failed",
+  "config": {
+    "problem_preview": "In the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different familie",
+    "max_generations": 5,
+    "num_candidates": 2,
+    "force_search": true,
+    "num_urls": 1,
+    "num_files": 1
+  },
+  "events": [
+    {
+      "timestamp": "2026-01-19T13:38:43.750437",
+      "level": "INFO",
+      "message": "Pipeline started",
+      "phase": "init"
+    },
+    {
+      "timestamp": "2026-01-19T13:38:43.750876",
+      "level": "INFO",
+      "message": "Research phase started",
+      "phase": "research"
+    },
+    {
+      "timestamp": "2026-01-19T13:44:05.508008",
+      "level": "INFO",
+      "message": "Generation 1: best=0.00, avg=0.00",
+      "generation": 1
+    },
+    {
+      "timestamp": "2026-01-19T13:46:41.909253",
+      "level": "INFO",
+      "message": "Run finished: failed",
+      "final_score": 0.0,
+      "total_tokens": 37084
+    },
+    {
+      "timestamp": "2026-01-19T13:46:41.910467",
+      "level": "INFO",
+      "message": "Pipeline complete. Log saved to: logs/evolution_20260119_133843.json"
+    }
+  ],
+  "llm_calls": [
+    {
+      "timestamp": "2026-01-19T13:38:55.888013",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are a research query generator. Generate targeted search queries for the given problem.\n\n## Problem Description\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next step for the ...",
+      "response_preview": "Here are 3-5 natural language search objectives to gather relevant information:\n\n1.  Investigate existing qLDPC decoding algorithms that explicitly leverage or account for the degeneracy phenomenon, beyond standard Belief Propagation (BP) and Ordered Statistics Decoding (OSD) post-processing.\n2.  Identify alternative decoding paradigms for quantum low-density parity-check (qLDPC) codes, particularly for Bivariate Bicycle (BB) codes, that do not rely on Belief Propagation or Ordered Statistics De...",
+      "duration_sec": 11.23,
+      "prompt_tokens": 2767,
+      "completion_tokens": 182,
+      "total_tokens": 2949,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T13:40:06.544402",
+      "model": "models/gemini-3-flash-preview",
+      "purpose": "general",
+      "prompt_preview": "You are a research synthesizer. Create a comprehensive context document from the gathered information.\n\n## Original Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next step ...",
+      "response_preview": "",
+      "duration_sec": 60.6,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "timestamp": "2026-01-19T13:40:36.664310",
+      "model": "models/gemini-3-flash-preview",
+      "purpose": "general",
+      "prompt_preview": "You are a test case generator. Create comprehensive Python tests for the given problem.\n\n## Problem Description\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next step for the reas...",
+      "response_preview": "```python\nimport collections\n\ndef run_tests():\n    \"\"\"\n    Comprehensive test suite for qLDPC Bivariate Bicycle codes and \n    degeneracy-aware decoding.\n    \"\"\"\n    results = {\"passed\": 0, \"total\": 0, \"details\": \"\"}\n\n    def log(msg):\n        results[\"details\"] += msg + \"\\n\"\n\n    def assert_test(condition, name):\n        results[\"total\"] += 1\n        if condition:\n            results[\"passed\"] += 1\n            log(f\"PASS: {name}\")\n        else:\n            log(f\"FAIL: {name}\")\n\n    # --- GF2 Li...",
+      "duration_sec": 30.12,
+      "prompt_tokens": 5117,
+      "completion_tokens": 2046,
+      "total_tokens": 7163,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T13:42:01.130908",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an expert Python programmer. Generate a solution for the following problem.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the...",
+      "response_preview": "import numpy as np\nfrom qldpc import codes\nfrom sympy.abc import x, y\nfrom collections import defaultdict\n\n# --- BB Code Definitions (Provided in problem context) ---\ncode_definitions = [\n    {\n        \"code\": codes.BBCode(\n            {x: 6, y: 6},\n            x**3 + y + y**2,\n            y**3 + x + x**2,\n        ),\n        \"name\": \"[[72, 12, 6]]\",\n        \"distance\": 6,\n        \"ell\": 6, \"m\": 6,\n        \"a_x_powers\": [3],\n        \"a_y_powers\": [1, 2],\n        \"b_y_powers\": [3],\n        \"b_x_po...",
+      "duration_sec": 84.46,
+      "prompt_tokens": 2128,
+      "completion_tokens": 3868,
+      "total_tokens": 5996,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T13:43:18.239326",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "```python\nimport numpy as np\nfrom collections import defaultdict\n\n# --- BB Code Definitions (Modified to remove 'code' object and prepare for direct Hx/Lx generation) ---\n# The 'code' object, which relies on the 'qldpc' library, has been removed\n# to fix the 'ModuleNotFoundError'. Hx and Lx matrices will now be constructed\n# from the 'ell', 'm', and 'powers' parameters directly using NumPy.\n# An explicit 'k_logical' field is added to define the number of logical qubits.\ncode_definitions = [\n    ...",
+      "duration_sec": 76.55,
+      "prompt_tokens": 5509,
+      "completion_tokens": 4554,
+      "total_tokens": 10063,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T13:43:45.482413",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "```python\nimport numpy as np\nimport re\nfrom collections import defaultdict\n\n# --- BB Code Definitions (Modified to remove 'code' object and add 'k' explicitly) ---\n# The 'k' value is extracted from the code name format \"[[n, k, d]]\".\ncode_definitions = [\n    {\n        \"name\": \"[[72, 12, 6]]\",\n        \"distance\": 6,\n        \"ell\": 6, \"m\": 6, \"k\": 12,\n        \"a_x_powers\": [3], \"a_y_powers\": [1, 2],\n        \"b_y_powers\": [3], \"b_x_powers\": [1, 2],\n    },\n    {\n        \"name\": \"[[90, 8, 10]]\",\n    ...",
+      "duration_sec": 103.7,
+      "prompt_tokens": 5508,
+      "completion_tokens": 5405,
+      "total_tokens": 10913,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T13:45:32.797139",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "",
+      "duration_sec": 87.29,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "timestamp": "2026-01-19T13:45:34.843890",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "",
+      "duration_sec": 89.23,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "timestamp": "2026-01-19T13:46:34.954203",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "",
+      "duration_sec": 60.01,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "timestamp": "2026-01-19T13:46:35.364282",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "",
+      "duration_sec": 60.52,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "timestamp": "2026-01-19T13:46:37.004337",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "",
+      "duration_sec": 1.64,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "timestamp": "2026-01-19T13:46:40.791838",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "",
+      "duration_sec": 5.32,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "timestamp": "2026-01-19T13:46:41.815784",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "",
+      "duration_sec": 1.02,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "timestamp": "2026-01-19T13:46:41.907825",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\n# Research Context\n\n## Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next ...",
+      "response_preview": "",
+      "duration_sec": 1.01,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    }
+  ],
+  "evolution_history": [
+    {
+      "timestamp": "2026-01-19T13:44:05.507990",
+      "generation": 1,
+      "candidates_count": 2,
+      "best_score": 0.0,
+      "avg_score": 0.0,
+      "all_scores": [
+        0.0,
+        0.0
+      ],
+      "best_code_preview": "import numpy as np\nfrom qldpc import codes\nfrom sympy.abc import x, y\nfrom collections import defaultdict\n\n# --- BB Code Definitions (Provided in problem context) ---\ncode_definitions = [\n    {\n        \"code\": codes.BBCode(\n            {x: 6, y: 6},\n            x**3 + y + y**2,\n            y**3 + x ..."
+    }
+  ],
+  "summary": {
+    "total_llm_calls": 14,
+    "total_tokens": 37084,
+    "total_llm_duration_sec": 672.7,
+    "total_generations": 1,
+    "final_score": 0.0,
+    "final_code_preview": "import numpy as np\nfrom qldpc import codes\nfrom sympy.abc import x, y\nfrom collections import defaultdict\n\n# --- BB Code Definitions (Provided in problem context) ---\ncode_definitions = [\n    {\n        \"code\": codes.BBCode(\n            {x: 6, y: 6},\n            x**3 + y + y**2,\n            y**3 + x + x**2,\n        ),\n        \"name\": \"[[72, 12, 6]]\",\n        \"distance\": 6,\n        \"ell\": 6, \"m\": 6,\n        \"a_x_powers\": [3],\n        \"a_y_powers\": [1, 2],\n        \"b_y_powers\": [3],\n        \"b_x_po..."
+  }
+}
