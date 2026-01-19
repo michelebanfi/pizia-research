@@ -7,3 +7,8 @@ beautifulsoup4
 python-dotenv
 parallel-web
 google-genai
+
+# Scientific computing (for generated code)
+numpy
+scipy
+sympy

@@ -72,6 +72,11 @@ INITIAL_CODE_PROMPT = """You are an expert Python programmer. Generate a solutio
 ## Requirements
 {requirements}
 
+## Constraints
+- You may ONLY use these Python packages: numpy, scipy, sympy, math, collections, itertools, functools, typing, random
+- Do NOT use pandas, sklearn, tensorflow, pytorch, or other ML/data packages
+- Implement any needed algorithms using numpy/scipy
+
 ## Task
 Write a complete Python solution. The code should be self-contained and implement all necessary functions.
 
@@ -102,6 +107,9 @@ If tests are failing, analyze why and fix the logic.
 **IMPORTANT**: When something doesn't work, think about WHY it doesn't work.
 Understanding the root cause helps expand our knowledge of the problem.
 If an approach fails, briefly note the reason before proposing the fix.
+
+**CONSTRAINTS**: You may ONLY use: numpy, scipy, sympy, math, collections, itertools, functools, typing, random.
+Do NOT use pandas, sklearn, tensorflow, pytorch, or other ML/data packages.
 
 Return ONLY the improved Python code, no explanations."""
 
@@ -134,6 +142,9 @@ replacement code
 **IMPORTANT**: When something doesn't work, explain WHY it doesn't work.
 Understanding the root cause deepens our knowledge of the problem domain.
 Before each fix, briefly note the underlying reason for the failure.
+
+**CONSTRAINTS**: You may ONLY use: numpy, scipy, sympy, math, collections, itertools, functools, typing, random.
+Do NOT use pandas, sklearn, tensorflow, pytorch, or other ML/data packages.
 
 You can include multiple SEARCH/REPLACE blocks for different fixes.
 Be precise with the search text - it must match exactly."""

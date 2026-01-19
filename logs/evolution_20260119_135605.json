@@ -1,0 +1,260 @@
+{
+  "run_id": "20260119_135605",
+  "run_name": "evolution_20260119_135605",
+  "started_at": "2026-01-19T13:56:05.484473",
+  "ended_at": "2026-01-19T14:18:25.513482",
+  "status": "failed",
+  "config": {
+    "problem_preview": "In the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different familie",
+    "max_generations": 3,
+    "num_candidates": 3,
+    "force_search": true,
+    "num_urls": 1,
+    "num_files": 1
+  },
+  "events": [
+    {
+      "timestamp": "2026-01-19T13:56:05.485234",
+      "level": "INFO",
+      "message": "Pipeline started",
+      "phase": "init"
+    },
+    {
+      "timestamp": "2026-01-19T13:56:05.485497",
+      "level": "INFO",
+      "message": "Research phase started",
+      "phase": "research"
+    },
+    {
+      "timestamp": "2026-01-19T14:15:19.483088",
+      "level": "INFO",
+      "message": "Generation 1: best=0.00, avg=0.00",
+      "generation": 1
+    },
+    {
+      "timestamp": "2026-01-19T14:15:48.556531",
+      "level": "INFO",
+      "message": "Generation 2: best=0.00, avg=0.00",
+      "generation": 2
+    },
+    {
+      "timestamp": "2026-01-19T14:18:25.513531",
+      "level": "INFO",
+      "message": "Run finished: failed",
+      "final_score": 0.0,
+      "total_tokens": 122053
+    },
+    {
+      "timestamp": "2026-01-19T14:18:25.515366",
+      "level": "INFO",
+      "message": "Pipeline complete. Log saved to: logs/evolution_20260119_135605.json"
+    }
+  ],
+  "llm_calls": [
+    {
+      "timestamp": "2026-01-19T13:56:14.041262",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are a research query generator. Generate targeted search queries for the given problem.\n\n## Problem Description\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next step for the ...",
+      "response_preview": "Here are 3-5 targeted search objectives to gather relevant information:\n\n1.  Identify existing quantum error correction decoding algorithms for qLDPC codes that explicitly leverage or account for \"degeneracy\" to enhance error correction performance, particularly for codes like Bivariate Bicyle (BB) codes.\n2.  Find advanced or alternative decoding algorithms for quantum LDPC codes, beyond Belief Propagation and Ordered Statistics Decoding (BP+OSD), that could offer improved performance by focusin...",
+      "duration_sec": 7.14,
+      "prompt_tokens": 2767,
+      "completion_tokens": 199,
+      "total_tokens": 2966,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:11:59.730112",
+      "model": "models/gemini-3-flash-preview",
+      "purpose": "general",
+      "prompt_preview": "You are a research synthesizer. Create a comprehensive context document from the gathered information.\n\n## Original Problem\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next step ...",
+      "response_preview": "This document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC) codes\u2014specifically the Bivariate Bicycle (BB) family\u2014that moves beyond the standard **Belief Pro...",
+      "duration_sec": 326.81,
+      "prompt_tokens": 36500,
+      "completion_tokens": 1770,
+      "total_tokens": 38270,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:12:26.346442",
+      "model": "models/gemini-3-flash-preview",
+      "purpose": "general",
+      "prompt_preview": "You are a test case generator. Create comprehensive Python tests for the given problem.\n\n## Problem Description\nIn the field of Quantum Error Correction (QEC) an emergent paradigm is defined by Quantum Low density\nParity Checks codes (qLDPC codes). These error correcting codes are divided into different families.\n\nThe most promising one is the Bivariate Bicyle codes family (BB codes). Even tho BB codes have vanishing rate\ni.e. they do not scale well, they're considered the next step for the reas...",
+      "response_preview": "```python\nimport math\n\ndef run_tests():\n    \"\"\"\n    Comprehensive test suite for Bivariate Bicycle (BB) code decoding\n    focusing on the [[72, 12, 6]] code and quantum degeneracy.\n    \"\"\"\n    test_results = []\n    \n    # Helper for GF2 operations\n    def gf2_add(v1, v2):\n        return [(a + b) % 2 for a, b in zip(v1, v2)]\n\n    def gf2_dot(v1, v2):\n        return sum(a * b for a, b in zip(v1, v2)) % 2\n\n    def gf2_matmul(M, v):\n        return [gf2_dot(row, v) for row in M]\n\n    def is_zero(v):\n...",
+      "duration_sec": 26.61,
+      "prompt_tokens": 4130,
+      "completion_tokens": 1865,
+      "total_tokens": 5995,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:14:48.587977",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an expert Python programmer. Generate a solution for the following problem.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check ...",
+      "response_preview": "import numpy as np\nimport scipy.linalg\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The RREF of the input matrix.\n        list: Indices of pivot columns.\n    \"\"\"\n    A = np.copy(matrix)\n    rows, cols = A.shape\n    pivot_row = 0\n    pivot_cols = []\n\n    for col_idx in range(cols):\n      ...",
+      "duration_sec": 125.57,
+      "prompt_tokens": 1612,
+      "completion_tokens": 4916,
+      "total_tokens": 6528,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:15:12.959698",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC...",
+      "response_preview": "```python\nimport numpy as np\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The RREF of the input matrix.\n        list: Indices of pivot columns.\n    \"\"\"\n    A = np.copy(matrix)\n    rows, cols = A.shape\n    pivot_row = 0\n    pivot_cols = []\n\n    for col_idx in range(cols):\n        if pivot...",
+      "duration_sec": 24.1,
+      "prompt_tokens": 6206,
+      "completion_tokens": 5068,
+      "total_tokens": 11274,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:15:13.468323",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC...",
+      "response_preview": "```python\nimport numpy as np\n# scipy.linalg is not used in the provided code, removing the import to fix ModuleNotFoundError\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The RREF of the input matrix.\n        list: Indices of pivot columns.\n    \"\"\"\n    A = np.copy(matrix)\n    rows, cols =...",
+      "duration_sec": 24.71,
+      "prompt_tokens": 6207,
+      "completion_tokens": 5647,
+      "total_tokens": 11854,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:15:18.909384",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC...",
+      "response_preview": "```python\nimport numpy as np\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The RREF of the input matrix.\n        list: Indices of pivot columns.\n    \"\"\"\n    A = np.copy(matrix)\n    rows, cols = A.shape\n    pivot_row = 0\n    pivot_cols = []\n\n    for col_idx in range(cols):\n        if pivot...",
+      "duration_sec": 29.95,
+      "prompt_tokens": 6205,
+      "completion_tokens": 5049,
+      "total_tokens": 11254,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:15:44.165952",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC...",
+      "response_preview": "```python\nimport numpy as np\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The RREF of the input matrix.\n        list: Indices of pivot columns.\n    \"\"\"\n    A = np.copy(matrix)\n    rows, cols = A.shape\n    pivot_row = 0\n    pivot_cols = []\n\n    for col_idx in range(cols):\n        if pivot...",
+      "duration_sec": 24.58,
+      "prompt_tokens": 6206,
+      "completion_tokens": 4916,
+      "total_tokens": 11122,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:15:44.320005",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC...",
+      "response_preview": "```python\nimport numpy as np\n# import scipy.linalg # Removed as it's not used and causes ModuleNotFoundError\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The RREF of the input matrix.\n        list: Indices of pivot columns.\n    \"\"\"\n    A = np.copy(matrix)\n    rows, cols = A.shape\n    piv...",
+      "duration_sec": 24.83,
+      "prompt_tokens": 6207,
+      "completion_tokens": 5462,
+      "total_tokens": 11669,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:15:47.993478",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC...",
+      "response_preview": "```python\nimport numpy as np\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The RREF of the input matrix.\n        list: Indices of pivot columns.\n    \"\"\"\n    A = np.copy(matrix)\n    rows, cols = A.shape\n    pivot_row = 0\n    pivot_cols = []\n\n    for col_idx in range(cols):\n        if pivot...",
+      "duration_sec": 28.31,
+      "prompt_tokens": 6205,
+      "completion_tokens": 4916,
+      "total_tokens": 11121,
+      "success": true,
+      "error": null
+    },
+    {
+      "timestamp": "2026-01-19T14:18:23.500781",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC...",
+      "response_preview": "",
+      "duration_sec": 0.26,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 36.39434102s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '36s'}]}}"
+    },
+    {
+      "timestamp": "2026-01-19T14:18:25.123232",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC...",
+      "response_preview": "",
+      "duration_sec": 0.09,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 34.770865357s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '34s'}]}}"
+    },
+    {
+      "timestamp": "2026-01-19T14:18:25.509317",
+      "model": "models/gemini-2.5-flash",
+      "purpose": "general",
+      "prompt_preview": "You are an evolutionary coding agent. Your task is to improve the given code.\n\n## Problem Context\nThis document synthesizes the provided research and code to provide a foundation for investigating advanced decoding strategies for **Bivariate Bicycle (BB) codes**, specifically focusing on leveraging **quantum degeneracy** to surpass the current BP+OSD gold standard.\n\n---\n\n### 1. Problem Analysis\nThe objective is to develop or refine a decoding algorithm for Quantum Low-Density Parity-Check (qLDPC...",
+      "response_preview": "",
+      "duration_sec": 0.09,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "success": false,
+      "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 34.377886465s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '34s'}]}}"
+    }
+  ],
+  "evolution_history": [
+    {
+      "timestamp": "2026-01-19T14:15:19.483049",
+      "generation": 1,
+      "candidates_count": 3,
+      "best_score": 0.0,
+      "avg_score": 0.0,
+      "all_scores": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "best_code_preview": "import numpy as np\nimport scipy.linalg\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The ..."
+    },
+    {
+      "timestamp": "2026-01-19T14:15:48.556493",
+      "generation": 2,
+      "candidates_count": 3,
+      "best_score": 0.0,
+      "avg_score": 0.0,
+      "all_scores": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "best_code_preview": "import numpy as np\nimport scipy.linalg\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The ..."
+    }
+  ],
+  "summary": {
+    "total_llm_calls": 13,
+    "total_tokens": 122053,
+    "total_llm_duration_sec": 643.05,
+    "total_generations": 2,
+    "final_score": 0.0,
+    "final_code_preview": "import numpy as np\nimport scipy.linalg\n\n# Helper function for Gaussian elimination (RREF) in GF(2)\ndef rref_gf2(matrix):\n    \"\"\"\n    Computes the Row Echelon Form (RREF) of a binary matrix in GF(2).\n    Args:\n        matrix (np.array): Input binary matrix (M x N).\n    Returns:\n        np.array: The RREF of the input matrix.\n        list: Indices of pivot columns.\n    \"\"\"\n    A = np.copy(matrix)\n    rows, cols = A.shape\n    pivot_row = 0\n    pivot_cols = []\n\n    for col_idx in range(cols):\n      ..."
+  }
+}

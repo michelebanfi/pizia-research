@@ -162,11 +162,17 @@ class LLMEngine:
                 error_str = str(e)
                 
                 # Check if this is a retryable error (503, 429, 500, connection errors)
-                is_retryable = any(code in error_str for code in ['503', '429', '500', 'overloaded', 'UNAVAILABLE', 'rate limit', 'quota'])
+                is_retryable = any(code in error_str for code in ['503', '429', '500', 'overloaded', 'UNAVAILABLE', 'RESOURCE_EXHAUSTED', 'rate limit', 'quota'])
                 
                 if is_retryable and attempt < max_retries:
-                    # Exponential backoff with jitter
-                    delay = base_delay * (2 ** (attempt - 1)) + (asyncio.get_event_loop().time() % 5)
+                    # Try to parse retry delay from API response (e.g., "Please retry in 36.39434102s")
+                    import re
+                    retry_match = re.search(r'retry in ([\d.]+)s', error_str)
+                    if retry_match:
+                        delay = float(retry_match.group(1)) + 2  # Add 2s buffer
+                    else:
+                        # Exponential backoff with jitter
+                        delay = base_delay * (2 ** (attempt - 1)) + (asyncio.get_event_loop().time() % 5)
                     print(f"[Google API] Retryable error on attempt {attempt}/{max_retries}: {error_str[:100]}...")
                     print(f"[Google API] Waiting {delay:.1f}s before retry...")
                     await asyncio.sleep(delay)
